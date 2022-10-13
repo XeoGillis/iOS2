@@ -7,12 +7,20 @@
 
 import Foundation
 class VolleyballGame: ObservableObject {
-    static let players = [Player(id: 1, name: "Sophie", position: ["Hitter"]), Player(id: 3, name: "Lieselotte", position: ["Setter"]), Player(id: 4, name: "Manon", position: ["Middle"]), Player(id: 5, name: "Lindsey", position: ["Hitter", "Middle"]), Player(id: 6, name: "Lieze", position: ["Middle"]), Player(id: 7, name: "Leontien", position: ["Hitter", "Middle", "Opposite"]), Player(id: 8, name: "Lien", position: ["Hitter", "Opposite"]), Player(id: 10, name: "Remie", position: ["Opposite", "Hitter"]), Player(id: 11, name: "Merel", position: ["Hitter", "Opposite"]), Player(id: 12, name: "Laura", position: ["Hitter", "Middle", "Opposite", "Libero"]), Player(id: 14, name: "Elke", position: ["Hitter", "Setter", "Opposite", "Libero"]), Player(id: 15, name: "Luka", position: ["Setter"]), Player(id: 17, name: "Romanie", position: ["Libero"])]
+    static let players = [1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 14, 15, 17, 18]
 
+    static func createGame() -> Game {
+        Game(arrayOfPresentPlayers: players)
+    }
+
+    @Published private var model: Game = createGame()
+        
+    var players: Array<Game.Player> {
+        model.players
+    }
     
-    struct Player: Identifiable {
-        var id: Int
-        var name: String
-        var position: Array<String>
+    // MARK - Intent(s)
+    func choosePosition(_ namedPosition : Int) {
+        model.choosePosition(namedPosition)
     }
 }

@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct DavoloApp: App {
+    let game = VolleyballGame()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: game)
         }
     }
 }
