@@ -7,10 +7,15 @@
 
 import SwiftUI
 
-let positions = [4, 3, 2, 5, 6, 1, 7]
-
 struct ContentView: View {
     @ObservedObject var viewModel: VolleyballGame
+    
+    let columns = [
+            GridItem(.flexible()),
+            GridItem(.flexible()),
+            GridItem(.flexible())
+        ]
+    let shape = RoundedRectangle(cornerRadius: 30)
     
     var body: some View {
         VStack {
@@ -24,33 +29,36 @@ struct ContentView: View {
                         }
                     }
                 }.padding(.horizontal).foregroundColor(.teal)
-                RightView(model: viewModel)
+                VStack {
+                    Text("Posities").font(.title).foregroundColor(.yellow)
+                    LazyVGrid(columns: columns) {
+                        ForEach(viewModel.positions) {
+                            position in PositionView(position: position).aspectRatio(2/3, contentMode: .fit).onTapGesture {
+                                viewModel.choosePosition(position.id)
+                            }
+                        }
+                    }
+                    Spacer()
+                }.padding(.horizontal)
             }
-            ButtonView()
-        }
-    }
-}
-
-struct RightView: View {
-    @ObservedObject var model : VolleyballGame
-    let columns = [
-            GridItem(.flexible()),
-            GridItem(.flexible()),
-            GridItem(.flexible())
-        ]
-    
-    var body: some View {
-        VStack {
-            Text("Posities").font(.title).foregroundColor(.yellow)
-            LazyVGrid(columns: columns) {
-                ForEach(positions, id: \.self) {
-                    position in PositionView(position: position).aspectRatio(2/3, contentMode: .fit).onTapGesture {
-                        model.choosePosition(Int(position))
+            HStack {
+                ZStack {
+                    shape.fill()
+                    shape.strokeBorder(lineWidth: 3).foregroundColor(.red)
+                    Button("❌"){
+                        viewModel.cancelSetUp()
                     }
                 }
-            }
-            Spacer()
-        }.padding(.horizontal)
+                Spacer()
+                ZStack {
+                    shape.fill()
+                    shape.strokeBorder(lineWidth: 3).foregroundColor(.green)
+                    Button("✔️"){
+                        viewModel.saveSetUp()
+                    }
+                }
+            }.foregroundColor(.white).frame(height: 40).padding(.vertical)
+        }
     }
 }
 
@@ -69,34 +77,14 @@ struct PlayerView: View {
 }
 
 struct PositionView: View {
-    let position: Int
+    let position: Game.Position
     
     var body: some View {
         ZStack {
             let shape = Rectangle()
             shape.fill()
-            Text(position.description).foregroundColor(.blue)
+            Text(position.content).foregroundColor(.blue)
         }.foregroundColor(.teal)
-    }
-}
-
-struct ButtonView: View {
-    let shape = RoundedRectangle(cornerRadius: 30)
-    
-    var body: some View {
-        HStack {
-            ZStack {
-                shape.fill()
-                shape.strokeBorder(lineWidth: 3).foregroundColor(.red)
-                Button("❌"){}
-            }
-            Spacer()
-            ZStack {
-                shape.fill()
-                shape.strokeBorder(lineWidth: 3).foregroundColor(.green)
-                Button("✔️"){}
-            }
-        }.foregroundColor(.white).frame(height: 40).padding(.vertical)
     }
 }
 
