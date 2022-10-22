@@ -24,23 +24,29 @@ struct ContentView: View {
                 ScrollView {
                     VStack {
                         Text("Spelers").font(.title).foregroundColor(.yellow)
-                        ForEach(viewModel.players) {
-                            player in PlayerView(player: player)
+                        ForEach(viewModel.players) { player in
+                            PlayerView(player: player)
+                                .onTapGesture {
+                                    viewModel.choosePlayer(player.id)
+                                }
                         }
                     }
                 }.padding(.horizontal).foregroundColor(.teal)
                 VStack {
                     Text("Posities").font(.title).foregroundColor(.yellow)
                     LazyVGrid(columns: columns) {
-                        ForEach(viewModel.positions) {
-                            position in PositionView(position: position).aspectRatio(2/3, contentMode: .fit).onTapGesture {
-                                viewModel.choosePosition(position.id)
-                            }
+                        ForEach(viewModel.positions) { position in
+                            PositionView(position: position)
+                                .aspectRatio(2/3, contentMode: .fit)
+                                .onTapGesture {
+                                    viewModel.choosePosition(position.id)
+                                }
                         }
                     }
                     Spacer()
                 }.padding(.horizontal)
             }
+            Spacer()
             HStack {
                 ZStack {
                     shape.fill()
@@ -48,7 +54,7 @@ struct ContentView: View {
                     Button("❌"){
                         viewModel.cancelSetUp()
                     }
-                }
+                }.padding(.horizontal)
                 Spacer()
                 ZStack {
                     shape.fill()
@@ -56,7 +62,7 @@ struct ContentView: View {
                     Button("✔️"){
                         viewModel.saveSetUp()
                     }
-                }
+                }.padding(.horizontal)
             }.foregroundColor(.white).frame(height: 40).padding(.vertical)
         }
     }
@@ -80,11 +86,20 @@ struct PositionView: View {
     let position: Game.Position
     
     var body: some View {
-        ZStack {
-            let shape = Rectangle()
-            shape.fill()
-            Text(position.content).foregroundColor(.blue)
-        }.foregroundColor(.teal)
+        if (position.isFilledIn) {
+            ZStack {
+                let shape = Rectangle()
+                shape.fill()
+                Text(position.content).foregroundColor(.blue)
+            }.foregroundColor(.green)
+        }
+        else {
+            ZStack {
+                let shape = Rectangle()
+                shape.fill()
+                Text(position.content).foregroundColor(.blue)
+            }.foregroundColor(.teal)
+        }
     }
 }
 

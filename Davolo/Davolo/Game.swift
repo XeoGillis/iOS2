@@ -15,7 +15,7 @@ struct Game {
     init(arrayOfPresentPlayers: Array<Int>, arrayOfPossiblePositions: Array<Int>) {
         players = Array<Player>()
         positions = Array<Position>()
-        for id in arrayOfPossiblePositions.sorted() {
+        for id in arrayOfPossiblePositions {
             positions.append(Position(id: id, content: String(id)))
         }
         for number in arrayOfPresentPlayers.sorted() {
@@ -31,51 +31,62 @@ struct Game {
             case 10: players.append(Player(position: [2, 5, 4], content: "Remie", id: number))
             case 11: players.append(Player(position: [2, 5, 4], content: "Merel", id: number))
             case 12: players.append(Player(position: [2, 5, 3, 6, 4], content: "Laura", id: number))
-            case 14: players.append(Player(position: [2, 5, 1, 4], content: "Elke", id: number))
+            case 14: players.append(Player(position: [2, 5, 1, 4], content: "Elke (l)", id: number))
             case 15: players.append(Player(position: [1], content: "Luka", id: number))
-            case 17: players.append(Player(position: [7], content: "Romanie", id: number))
+            case 17: players.append(Player(position: [7], content: "Romanie (l)", id: number))
             default: print("Error in given player: " + String(number))
             }
         }
     }
     
     mutating func choosePosition(_ namedPosition : Int) {
-        print("-----------------------------------------")
-        print("Position: ")
-        print("-----------------------------------------")
-        print(namedPosition)
-        print("-----------------------------------------")
-        print("All players:")
-        print("-----------------------------------------")
-        for var player in players {
-            player.isFaceUp = false
-            print(player.content, player.isFaceUp)
+        for index in players.indices {
+            let suitable = players[index].position.contains(namedPosition) && !players[index].isAlreadyChosen
+            players[index].isFaceUp = suitable
+            
         }
-        let suitablePlayers = players.filter { $0.position.contains(namedPosition) }
-        print("-----------------------------------------")
-        print("Suitable players:")
-        print("-----------------------------------------")
-        for var player in suitablePlayers {
-            player.isFaceUp = true
-            print(player.content, player.isFaceUp)
+    }
+    
+    mutating func choosePlayer(_ namedPlayer : Int, at namedPosition : Int) {
+        for index in positions.indices {
+            if positions[index].id == namedPosition {
+                if positions[index].isFilledIn == true {
+                    editPlayer(index, at: namedPosition)
+                }
+                positions[index].isFilledIn = true
+                positions[index].player = namedPlayer
+            }
+        }
+        for index in players.indices {
+            if players[index].id == namedPlayer {
+                players[index].isAlreadyChosen = true
+            }
+            players[index].isFaceUp = false
+        }
+    }
+    
+    mutating func editPlayer(_ indexPlayer : Int, at namedPosition : Int) {
+        for index in players.indices {
+            if players[index].id == positions[indexPlayer].player {
+                players[index].isAlreadyChosen = false
+            }
         }
     }
     
     mutating func cancelSetUp() {
-        for var position in positions {
-            position.isFilledIn = false
+        for index in positions.indices {
+            positions[index].isFilledIn = false
         }
-        for var player in players {
-            player.isFaceUp = false
-            player.isAlreadyChosen = false
+        for index in players.indices {
+            players[index].isFaceUp = false
+            players[index].isAlreadyChosen = false
         }
     }
     
-    // Code based on code found on https://nemecek.be/blog/61/ios-14-how-to-send-email-using-default-email-app
     mutating func saveSetUp() {
-        var mailText = "Opstelling:"
+        var mailText = "Opstelling: \n"
         for position in positions {
-            mailText += "Positie: " + position.content + " met speler: " + String(position.player)
+            mailText += "Positie: " + position.content + " met speler: " + String(position.player) + "\n"
         }
         print(mailText)
     }
