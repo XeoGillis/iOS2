@@ -12,7 +12,7 @@ struct DavoloApp: App {
     let game = VolleyballGame()
     var body: some Scene {
         WindowGroup {
-            ContentView(viewModel: game)
+            RouterView(viewModel: game).background(DavoloColor.Background)
         }
     }
 }

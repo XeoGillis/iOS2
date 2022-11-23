@@ -7,22 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA51D22A29196F2200149C32 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA51D22929196F2200149C32 /* LoginView.swift */; };
 		AA60230F28ED6AEE00E480FB /* DavoloApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA60230E28ED6AEE00E480FB /* DavoloApp.swift */; };
 		AA60231328ED6AEE00E480FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA60231228ED6AEE00E480FB /* Assets.xcassets */; };
 		AA60231628ED6AEE00E480FB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA60231528ED6AEE00E480FB /* Preview Assets.xcassets */; };
 		AA60232328ED6D9C00E480FB /* VolleyballGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA60232228ED6D9C00E480FB /* VolleyballGame.swift */; };
 		AA60232528ED713200E480FB /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA60232428ED713200E480FB /* Game.swift */; };
-		AA60232728ED73C000E480FB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA60232628ED73C000E480FB /* ContentView.swift */; };
+		AA60232728ED73C000E480FB /* RouterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA60232628ED73C000E480FB /* RouterView.swift */; };
+		AA7A99782917A32900B88DFE /* SelectPlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A99772917A32900B88DFE /* SelectPlayersView.swift */; };
+		AA7A997C2917A42A00B88DFE /* PlayerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A997B2917A42A00B88DFE /* PlayerListView.swift */; };
+		AA7A997E2917A4D500B88DFE /* PositionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A997D2917A4D500B88DFE /* PositionListView.swift */; };
+		AAD42FF429126E4600EB6513 /* Router in Frameworks */ = {isa = PBXBuildFile; productRef = AAD42FF329126E4600EB6513 /* Router */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA51D22929196F2200149C32 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		AA60230B28ED6AEE00E480FB /* Davolo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Davolo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA60230E28ED6AEE00E480FB /* DavoloApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DavoloApp.swift; sourceTree = "<group>"; };
 		AA60231228ED6AEE00E480FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA60231528ED6AEE00E480FB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AA60232228ED6D9C00E480FB /* VolleyballGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolleyballGame.swift; sourceTree = "<group>"; };
 		AA60232428ED713200E480FB /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
-		AA60232628ED73C000E480FB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AA60232628ED73C000E480FB /* RouterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterView.swift; sourceTree = "<group>"; };
+		AA7A99772917A32900B88DFE /* SelectPlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlayersView.swift; sourceTree = "<group>"; };
+		AA7A997B2917A42A00B88DFE /* PlayerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListView.swift; sourceTree = "<group>"; };
+		AA7A997D2917A4D500B88DFE /* PositionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAD42FF429126E4600EB6513 /* Router in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,11 +66,15 @@
 			isa = PBXGroup;
 			children = (
 				AA60230E28ED6AEE00E480FB /* DavoloApp.swift */,
-				AA60232628ED73C000E480FB /* ContentView.swift */,
+				AA60232628ED73C000E480FB /* RouterView.swift */,
 				AA60232428ED713200E480FB /* Game.swift */,
 				AA60232228ED6D9C00E480FB /* VolleyballGame.swift */,
 				AA60231228ED6AEE00E480FB /* Assets.xcassets */,
 				AA60231428ED6AEE00E480FB /* Preview Content */,
+				AA7A99772917A32900B88DFE /* SelectPlayersView.swift */,
+				AA7A997B2917A42A00B88DFE /* PlayerListView.swift */,
+				AA7A997D2917A4D500B88DFE /* PositionListView.swift */,
+				AA51D22929196F2200149C32 /* LoginView.swift */,
 			);
 			path = Davolo;
 			sourceTree = "<group>";
@@ -89,6 +103,9 @@
 			dependencies = (
 			);
 			name = Davolo;
+			packageProductDependencies = (
+				AAD42FF329126E4600EB6513 /* Router */,
+			);
 			productName = Davolo;
 			productReference = AA60230B28ED6AEE00E480FB /* Davolo.app */;
 			productType = "com.apple.product-type.application";
@@ -117,6 +134,9 @@
 				Base,
 			);
 			mainGroup = AA60230228ED6AEE00E480FB;
+			packageReferences = (
+				AAD42FF229126E4600EB6513 /* XCRemoteSwiftPackageReference "Router" */,
+			);
 			productRefGroup = AA60230C28ED6AEE00E480FB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -143,9 +163,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA7A99782917A32900B88DFE /* SelectPlayersView.swift in Sources */,
+				AA7A997E2917A4D500B88DFE /* PositionListView.swift in Sources */,
 				AA60232528ED713200E480FB /* Game.swift in Sources */,
 				AA60230F28ED6AEE00E480FB /* DavoloApp.swift in Sources */,
-				AA60232728ED73C000E480FB /* ContentView.swift in Sources */,
+				AA7A997C2917A42A00B88DFE /* PlayerListView.swift in Sources */,
+				AA60232728ED73C000E480FB /* RouterView.swift in Sources */,
+				AA51D22A29196F2200149C32 /* LoginView.swift in Sources */,
 				AA60232328ED6D9C00E480FB /* VolleyballGame.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -347,6 +371,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AAD42FF229126E4600EB6513 /* XCRemoteSwiftPackageReference "Router" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:1amageek/Router.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AAD42FF329126E4600EB6513 /* Router */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AAD42FF229126E4600EB6513 /* XCRemoteSwiftPackageReference "Router" */;
+			productName = Router;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AA60230328ED6AEE00E480FB /* Project object */;
 }

@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "router",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:1amageek/Router.git",
+      "state" : {
+        "revision" : "999d73129a5565990ab61882fc9f77a43b1ee408",
+        "version" : "0.5.0"
+      }
+    }
+  ],
+  "version" : 2
+}

@@ -9,35 +9,44 @@ import Foundation
 import MessageUI
 
 struct Game {
+    
+    // ATTRIBUTES
+    
     private(set) var players: Array<Player>
     private(set) var positions: Array<Position>
+    private(set) var playersPOST: Array<String>
+    private let emojies = ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐻‍❄️", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐵"]
     
-    init(arrayOfPresentPlayers: Array<Int>, arrayOfPossiblePositions: Array<Int>) {
+    // INITIALIZATION - UPDATE PLAYERS AND POSITIONS ON CHANGE
+    
+    init() {
         players = Array<Player>()
         positions = Array<Position>()
-        for id in arrayOfPossiblePositions {
-            positions.append(Position(id: id, content: String(id)))
-        }
-        for number in arrayOfPresentPlayers.sorted() {
-            switch (number) {
-            case 1: players.append(Player(position: [2, 5], content: "Sophie", id: number))
-            case 2: players.append(Player(position: [7], content: "Elke", id: number))
-            case 3: players.append(Player(position: [1], content: "Lieselotte", id: number))
-            case 4: players.append(Player(position: [3, 6], content: "Manon", id: number))
-            case 5: players.append(Player(position: [2, 5, 3, 6], content: "Lindsey", id: number))
-            case 6: players.append(Player(position: [3, 6], content: "Lieze", id: number))
-            case 7: players.append(Player(position: [2, 5, 3, 6, 4], content: "Leontien", id: number))
-            case 8: players.append(Player(position: [2, 5, 4], content: "Lien", id: number))
-            case 10: players.append(Player(position: [2, 5, 4], content: "Remie", id: number))
-            case 11: players.append(Player(position: [2, 5, 4], content: "Merel", id: number))
-            case 12: players.append(Player(position: [2, 5, 3, 6, 4], content: "Laura", id: number))
-            case 14: players.append(Player(position: [2, 5, 1, 4], content: "Elke (l)", id: number))
-            case 15: players.append(Player(position: [1], content: "Luka", id: number))
-            case 17: players.append(Player(position: [7], content: "Romanie (l)", id: number))
-            default: print("Error in given player: " + String(number))
-            }
+        playersPOST = Array<String>()
+    }
+    mutating func updatePlayers(_ allPlayers: Array<VolleyballGame.Player>) {
+        players = Array<Player>()
+        allPlayers.forEach { player in
+            let positions = player.position.split(separator: " ")
+            players.append(Player(position: positions.map { Int($0)! }, content: player.name, id: player.number))
         }
     }
+    mutating func updatePositions(_ allPositions: Array<VolleyballGame.Position>) {
+        positions = Array<Position>()
+        allPositions.forEach { positions.append(Position(id: $0.id, content: String($0.position), image: emojies[Int.random(in: 0..<emojies.count)])) }
+        playersPOST = Array(repeating: "", count: allPositions.count)
+    }
+    
+    // STARTSCREEN
+    
+    mutating func selectAllPlayers() {
+        players.indices.forEach { players[$0].isSelected = true }
+    }
+    mutating func addPlayer(with number : Int) {
+        players.indices.forEach { if players[$0].id == number { players[$0].isSelected.toggle() } }
+    }
+    
+    // CHOOSE POSITION AND PLAYER
     
     mutating func choosePosition(_ namedPosition : Int) {
         for index in players.indices {
@@ -46,10 +55,10 @@ struct Game {
             
         }
     }
-    
     mutating func choosePlayer(_ namedPlayer : Int, at namedPosition : Int) {
+        playersPOST[namedPosition-1] = getPlayerById(namedPlayer)
         for index in positions.indices {
-            if positions[index].id == namedPosition {
+            if positions[index].content == String(namedPosition) {
                 if positions[index].isFilledIn == true {
                     editPlayer(index, at: namedPosition)
                 }
@@ -64,7 +73,6 @@ struct Game {
             players[index].isFaceUp = false
         }
     }
-    
     mutating func editPlayer(_ indexPlayer : Int, at namedPosition : Int) {
         for index in players.indices {
             if players[index].id == positions[indexPlayer].player {
@@ -72,6 +80,13 @@ struct Game {
             }
         }
     }
+    func getPlayerById(_ id: Int) -> String {
+        var answer = ""
+        players.indices.forEach { if players[$0].id == id { answer = players[$0].content }}
+        return answer
+    }
+    
+    // BUTTONS
     
     mutating func cancelSetUp() {
         for index in positions.indices {
@@ -82,28 +97,55 @@ struct Game {
             players[index].isAlreadyChosen = false
         }
     }
-    
-    mutating func saveSetUp() {
-        var mailText = "Opstelling: \n"
-        for position in positions {
-            mailText += "Positie: " + position.content + " met speler: " + String(position.player) + "\n"
+    mutating func saveSetUp(mailto mail: String) {
+        var positionsPOST = ""
+        positions.indices.forEach {
+            positionsPOST += String(positions[$0].id) + " "
         }
-        print(mailText)
+        save(positionsPOST, playersPOST.joined(separator: " "), mailto: mail)
     }
+    func postAPI(_ pos: String, _ play: String, _ mail: String) async {
+        let url = URL(string: "http://localhost:9000/api/match")
+        guard let requestUrl = url else { fatalError() }
+
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "POST"
+
+        let postString = "position=" + pos + "&player=" + play + "&mail=" + mail;
+
+        request.httpBody = postString.data(using: String.Encoding.utf8);
+
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error took place \(error)")
+                return
+            }
+        }
+        task.resume()
+    }
+    func save(_ pos: String, _ play: String, mailto mail: String) {
+        Task {
+            await postAPI(pos, play, mail)
+        }
+    }
+
+    
+    // STRUCTS
     
     struct Player: Identifiable {
+        var isSelected: Bool = false
         var isFaceUp: Bool = false
         var isAlreadyChosen: Bool = false
         var position: Array<Int>
         var content: String
         var id: Int
     }
-    
     struct Position: Identifiable {
         var id: Int
         var content: String
         var isFilledIn: Bool = false
         var player: Int = 0
+        var image: String
     }
 }
 
