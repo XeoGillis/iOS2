@@ -127,6 +127,7 @@ class VolleyballGame: ObservableObject {
         let name: String
         let number: Int
         let position: String
+        let image: String
     }
     struct Position: Codable {
         let id: Int

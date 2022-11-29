@@ -15,7 +15,6 @@ struct Game {
     private(set) var players: Array<Player>
     private(set) var positions: Array<Position>
     private(set) var playersPOST: Array<String>
-    private let emojies = ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐻‍❄️", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐵"]
     
     // INITIALIZATION - UPDATE PLAYERS AND POSITIONS ON CHANGE
     
@@ -28,12 +27,12 @@ struct Game {
         players = Array<Player>()
         allPlayers.forEach { player in
             let positions = player.position.split(separator: " ")
-            players.append(Player(position: positions.map { Int($0)! }, content: player.name, id: player.number))
+            players.append(Player(position: positions.map { Int($0)! }, content: player.name, id: player.number, image: player.image))
         }
     }
     mutating func updatePositions(_ allPositions: Array<VolleyballGame.Position>) {
         positions = Array<Position>()
-        allPositions.forEach { positions.append(Position(id: $0.id, content: String($0.position), image: emojies[Int.random(in: 0..<emojies.count)])) }
+        allPositions.forEach { positions.append(Position(id: $0.id, content: String($0.position))) }
         playersPOST = Array(repeating: "", count: allPositions.count)
     }
     
@@ -52,10 +51,10 @@ struct Game {
         for index in players.indices {
             let suitable = players[index].position.contains(namedPosition) && !players[index].isAlreadyChosen
             players[index].isFaceUp = suitable
-            
         }
     }
     mutating func choosePlayer(_ namedPlayer : Int, at namedPosition : Int) {
+        var rememberIndex = 0
         playersPOST[namedPosition-1] = getPlayerById(namedPlayer)
         for index in positions.indices {
             if positions[index].content == String(namedPosition) {
@@ -64,11 +63,13 @@ struct Game {
                 }
                 positions[index].isFilledIn = true
                 positions[index].player = namedPlayer
+                rememberIndex = index
             }
         }
         for index in players.indices {
             if players[index].id == namedPlayer {
                 players[index].isAlreadyChosen = true
+                positions[rememberIndex].image = players[index].image
             }
             players[index].isFaceUp = false
         }
@@ -139,13 +140,14 @@ struct Game {
         var position: Array<Int>
         var content: String
         var id: Int
+        var image: String
     }
     struct Position: Identifiable {
         var id: Int
         var content: String
         var isFilledIn: Bool = false
         var player: Int = 0
-        var image: String
+        var image: String = ""
     }
 }
 

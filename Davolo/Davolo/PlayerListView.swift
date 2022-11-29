@@ -16,7 +16,7 @@ struct PlayerListView: View {
         ScrollView {
             VStack {
                 ForEach(viewModel.players) { player in
-                    if (player.isSelected) {
+                    if (player.isSelected && player.isFaceUp) {
                         PlayerView(player: player, viewModel: viewModel)
                     }
                 }
@@ -31,7 +31,6 @@ struct PlayerView: View {
     @ObservedObject var viewModel: VolleyballGame
     
     var body: some View {
-        if player.isFaceUp {
             Button(action: {
                 viewModel.choosePlayer(player.id)
                 navigator.pop {
@@ -44,7 +43,6 @@ struct PlayerView: View {
                     Text(player.content).font(.body).foregroundColor(DavoloColor.Text)
                 }
             }
-        }
     }
 }
 

@@ -32,21 +32,25 @@ struct PositionListView: View {
 
 struct PositionView: View {
     let position: Game.Position
-    @ObservedObject var viewModel: VolleyballGame
+    @StateObject var viewModel: VolleyballGame
     @Environment(\.navigator) private var navigator: Binding<Navigator>
     
     var body: some View {
         Button(action: {
             viewModel.choosePosition(Int(position.content)!)
             navigator.push {
-                navigator.wrappedValue.path = "/davolo/\(position)"
+                navigator.wrappedValue.path = "/davolo/\(position.content)"
             }
         }) {
             if (position.isFilledIn) {
                 ZStack {
                     let shape = Rectangle()
                     shape.fill().shadow(radius: 15)
-                    Text(position.image).foregroundColor(DavoloColor.Title).font(.largeTitle)
+                    AsyncImage(url: URL(string: position.image)) { image in
+                        image.resizable()
+                    } placeholder: {
+                        DavoloColor.Table
+                    }
                 }.foregroundColor(DavoloColor.Table)
             }
             else {
@@ -54,7 +58,7 @@ struct PositionView: View {
                     let shape = Rectangle()
                     shape.fill().shadow(radius: 15)
                     Text(position.content).foregroundColor(DavoloColor.Text)
-                }.foregroundColor(DavoloColor.Table)
+                }.foregroundColor(DavoloColor.Background)
             }
         }
     }
