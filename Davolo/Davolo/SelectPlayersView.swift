@@ -12,13 +12,18 @@ struct SelectPlayersView: View {
     @ObservedObject var viewModel: VolleyballGame
     
     var body: some View {
-        ScrollView {
-            VStack {
-                ForEach(viewModel.players.indices) { player in
-                    PlayerSelectView(index: player, viewModel: viewModel)
+            ZStack {
+                VStack {
+                    ScrollView {
+                        VStack {
+                            ForEach(viewModel.players.indices) { player in
+                                PlayerSelectView(index: player, viewModel: viewModel)
+                            }
+                        }
+                    }.padding(.horizontal).foregroundColor(DavoloColor.Table)
+                    ButtonSelectView(viewModel: viewModel)
                 }
-            }
-        }.padding(.horizontal).foregroundColor(DavoloColor.Table)
+            }.background(DavoloColor.Background).navigationTitle("Selecteer spelers")
     }
 }
 
@@ -107,29 +112,13 @@ struct CardBack: View {
 }
 
 struct ButtonSelectView: View {
-    @Environment(\.navigator) private var navigator: Binding<Navigator>
     @ObservedObject var viewModel: VolleyballGame
     let shape = RoundedRectangle(cornerRadius: 30)
     
     var body: some View {
         Spacer()
         HStack {
-            Button(action: {
-                navigator.pop {
-                    navigator.wrappedValue.path = "/login"
-                }
-            }) {
-                ZStack {
-                    shape.fill()
-                    shape.strokeBorder(lineWidth: 3).foregroundColor(.blue)
-                    Text("👈").font(.largeTitle)
-                }.padding(.horizontal)
-            }
-            Button(action: {
-                navigator.push {
-                    navigator.wrappedValue.path = "/davolo"
-                }
-            }) {
+            NavigationLink(destination: PositionListView(viewModel: viewModel)) {
                 ZStack {
                     shape.fill()
                     shape.strokeBorder(lineWidth: 3).foregroundColor(.blue)

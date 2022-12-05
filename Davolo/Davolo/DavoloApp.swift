@@ -10,9 +10,10 @@ import SwiftUI
 @main
 struct DavoloApp: App {
     let game = VolleyballGame()
+    
     var body: some Scene {
         WindowGroup {
-            RouterView(viewModel: game).background(DavoloColor.Background)
+            LoginView(viewModel: game)
         }
     }
 }

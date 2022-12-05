@@ -10,6 +10,7 @@ import Router
 
 struct PositionListView: View {
     @ObservedObject var viewModel: VolleyballGame
+    @Environment(\.verticalSizeClass) var vSize
     
     let columns = [
             GridItem(.flexible()),
@@ -18,49 +19,80 @@ struct PositionListView: View {
         ]
     
     var body: some View {
-        VStack {
-            LazyVGrid(columns: columns) {
-                ForEach(viewModel.positions) { position in
-                    PositionView(position: position, viewModel: viewModel)
-                        .aspectRatio(2/3, contentMode: .fit)
-                }
-            }
-            Spacer()
-        }.padding(.horizontal)
+            ZStack {
+                VStack {
+                    if (vSize == .regular) {
+                        LazyVGrid(columns: columns) {
+                            ForEach(viewModel.positions) { position in
+                                PositionView(position: position, viewModel: viewModel)
+                                    .aspectRatio(2/3, contentMode: .fit)
+                            }
+                        }
+                        Spacer()
+                        ButtonsView(viewModel: viewModel)
+                    }
+                    else {
+                        HStack {
+                            LazyVGrid(columns: columns) {
+                                ForEach(viewModel.positions) { position in
+                                    if (position.content != "7") {
+                                        PositionView(position: position, viewModel: viewModel)
+                                            .aspectRatio(2/3, contentMode: .fit).frame(
+                                                maxWidth: UIScreen.main.bounds.size.width/4,
+                                                maxHeight: UIScreen.main.bounds.size.height/2 - 50)
+                                    }
+                                }
+                            }
+                            VStack {
+                                ForEach(viewModel.positions) { position in
+                                    if (position.content == "7") {
+                                        PositionView(position: position, viewModel: viewModel)
+                                            .aspectRatio(2/3, contentMode: .fit).frame(
+                                                maxWidth: UIScreen.main.bounds.size.width/4,
+                                                maxHeight: UIScreen.main.bounds.size.height/2 - 50)
+                                    }
+                                }
+                                Spacer()
+                                ButtonsView(viewModel: viewModel)
+                            }
+                        }
+                    }
+                }.padding(.horizontal)
+            }.background(DavoloColor.Background).navigationTitle("Posities")
     }
 }
 
 struct PositionView: View {
     let position: Game.Position
     @StateObject var viewModel: VolleyballGame
-    @Environment(\.navigator) private var navigator: Binding<Navigator>
     
     var body: some View {
-        Button(action: {
-            viewModel.choosePosition(Int(position.content)!)
-            navigator.push {
-                navigator.wrappedValue.path = "/davolo/\(position.content)"
-            }
-        }) {
-            if (position.isFilledIn) {
-                ZStack {
-                    let shape = Rectangle()
-                    shape.fill().shadow(radius: 15)
-                    AsyncImage(url: URL(string: position.image)) { image in
-                        image.resizable()
-                    } placeholder: {
-                        DavoloColor.Table
-                    }
-                }.foregroundColor(DavoloColor.Table)
-            }
-            else {
-                ZStack {
-                    let shape = Rectangle()
-                    shape.fill().shadow(radius: 15)
-                    Text(position.content).foregroundColor(DavoloColor.Text)
-                }.foregroundColor(DavoloColor.Background)
-            }
-        }
+                if (position.isFilledIn) {
+                    NavigationLink (destination: PlayerListView(viewModel: viewModel)) {
+                        ZStack {
+                            let shape = Rectangle()
+                            shape.fill().shadow(radius: 15)
+                            AsyncImage(url: URL(string: position.image)) { image in
+                                image.resizable()
+                            } placeholder: {
+                                DavoloColor.Table
+                            }
+                        }.foregroundColor(DavoloColor.Table)
+                    }.simultaneousGesture(TapGesture().onEnded {
+                        viewModel.choosePosition(Int(position.content)!)
+                    })
+                }
+                else {
+                    NavigationLink (destination: PlayerListView(viewModel: viewModel)) {
+                        ZStack {
+                            let shape = Rectangle()
+                            shape.fill().shadow(radius: 15)
+                            Text(position.content).foregroundColor(DavoloColor.Text)
+                        }.foregroundColor(DavoloColor.Background)
+                    }.simultaneousGesture(TapGesture().onEnded {
+                        viewModel.choosePosition(Int(position.content)!)
+                    })
+                }
     }
 }
 
@@ -68,24 +100,11 @@ struct ButtonsView: View {
     @ObservedObject var viewModel: VolleyballGame
     @State private var allPositions = false
     @State private var showPopUp = false
-    @Environment(\.navigator) private var navigator: Binding<Navigator>
     let shape = RoundedRectangle(cornerRadius: 30)
     
     var body: some View {
         if (!showPopUp) {
             HStack {
-                Button(action: {
-                    viewModel.cancelSetUp()
-                    navigator.pop {
-                        navigator.wrappedValue.path = "/"
-                    }
-                }) {
-                    ZStack {
-                        shape.fill()
-                        shape.strokeBorder(lineWidth: 3).foregroundColor(.blue)
-                        Text("👈").font(.largeTitle)
-                    }.padding(.horizontal)
-                }
                 ZStack {
                     shape.fill()
                     shape.strokeBorder(lineWidth: 3).foregroundColor(.red)

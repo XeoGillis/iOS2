@@ -10,60 +10,47 @@ import Router
 
 struct PlayerListView: View {
     @ObservedObject var viewModel: VolleyballGame
-    @Environment(\.navigator) private var navigator: Binding<Navigator>
     
     var body: some View {
-        ScrollView {
-            VStack {
-                ForEach(viewModel.players) { player in
-                    if (player.isSelected && player.isFaceUp) {
-                        PlayerView(player: player, viewModel: viewModel)
+            ZStack {
+                if viewModel.players.filter { $0.isSelected && $0.isFaceUp }.count > 0 {
+                    VStack {
+                        ForEach(viewModel.players) { player in
+                            if (player.isSelected && player.isFaceUp) {
+                                PlayerView(player: player, viewModel: viewModel)
+                            }
+                        }
+                        Spacer()
+                    }.padding(.horizontal).foregroundColor(DavoloColor.Table)
+                }
+                else {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Text("Er zijn geen spelers meer beschikbaar die op deze positie kunnen spelen").foregroundColor(DavoloColor.Text)
+                            Spacer()
+                        }
+                        Spacer()
                     }
                 }
-            }
-        }.padding(.horizontal).foregroundColor(DavoloColor.Table)
+            }.background(DavoloColor.Background).navigationTitle("Kies speler")
     }
 }
 
 struct PlayerView: View {
     let player: Game.Player
-    @Environment(\.navigator) private var navigator: Binding<Navigator>
     @ObservedObject var viewModel: VolleyballGame
     
     var body: some View {
             Button(action: {
                 viewModel.choosePlayer(player.id)
-                navigator.pop {
-                    navigator.wrappedValue.path = "/davolo"
-                }
             }) {
                 ZStack {
                     let shape = Rectangle()
-                    shape.fill(DavoloColor.Table).frame(minHeight: 70).shadow(radius: 15)
+                    shape.fill(DavoloColor.Table).frame(minHeight: 70, maxHeight: 70).shadow(radius: 15)
                     Text(player.content).font(.body).foregroundColor(DavoloColor.Text)
                 }
             }
-    }
-}
-
-struct ButtonsReturnView: View {
-    @Environment(\.navigator) private var navigator: Binding<Navigator>
-    let shape = RoundedRectangle(cornerRadius: 30)
-    
-    var body: some View {
-        Spacer()
-        HStack {
-            Button(action: {
-                navigator.pop {
-                    navigator.wrappedValue.path = "/davolo"
-                }
-            }) {
-                ZStack {
-                    shape.fill()
-                    shape.strokeBorder(lineWidth: 3).foregroundColor(.blue)
-                    Text("👈").font(.largeTitle)
-                }.padding(.horizontal)
-            }
-        }.foregroundColor(.white).frame(height: 40).padding(.vertical)
     }
 }
