@@ -70,8 +70,8 @@ struct Game {
             if players[index].id == namedPlayer {
                 players[index].isAlreadyChosen = true
                 positions[rememberIndex].image = players[index].image
+                players[index].isFaceUp = false
             }
-            players[index].isFaceUp = false
         }
     }
     mutating func editPlayer(_ indexPlayer : Int, at namedPosition : Int) {
@@ -80,6 +80,7 @@ struct Game {
                 players[index].isAlreadyChosen = false
             }
         }
+        choosePosition(namedPosition)
     }
     func getPlayerById(_ id: Int) -> String {
         var answer = ""

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Router
 
 struct PlayerListView: View {
     @ObservedObject var viewModel: VolleyballGame

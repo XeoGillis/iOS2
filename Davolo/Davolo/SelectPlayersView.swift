@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Router
 
 struct SelectPlayersView: View {
     @ObservedObject var viewModel: VolleyballGame
@@ -16,7 +15,7 @@ struct SelectPlayersView: View {
                 VStack {
                     ScrollView {
                         VStack {
-                            ForEach(viewModel.players.indices) { player in
+                            ForEach(viewModel.players) { player in
                                 PlayerSelectView(index: player, viewModel: viewModel)
                             }
                         }
@@ -28,7 +27,7 @@ struct SelectPlayersView: View {
 }
 
 struct PlayerSelectView: View {
-    let index: Int
+    let index: Game.Player
     @ObservedObject var viewModel: VolleyballGame
     @State var backDegree = 0.0
     @State var frontDegree = -90.0
@@ -57,18 +56,18 @@ struct PlayerSelectView: View {
     
     var body: some View {
         ZStack {
-            CardFront(index: index, viewModel: viewModel, degree: $frontDegree)
-            CardBack(index: index, viewModel: viewModel, degree: $backDegree)
+            CardFront(player: index, viewModel: viewModel, degree: $frontDegree)
+            CardBack(player: index, viewModel: viewModel, degree: $backDegree)
         }.onTapGesture {
             flipCard()
-            viewModel.addPlayer(with: viewModel.players[index].id)
+            viewModel.addPlayer(with: index.id)
         }
         
     }
 }
 
 struct CardFront: View {
-    let index: Int
+    let player: Game.Player
     @ObservedObject var viewModel: VolleyballGame
     @Binding var degree: Double
     
@@ -78,7 +77,7 @@ struct CardFront: View {
             shape.fill(DavoloColor.Table).frame(minHeight: 70).shadow(radius: 15)
             HStack {
                 Spacer()
-                Text(viewModel.players[index].content).font(.body).foregroundColor(DavoloColor.Text)
+                Text(player.content).font(.body).foregroundColor(DavoloColor.Text)
                 Spacer()
             }
             HStack {
@@ -90,7 +89,7 @@ struct CardFront: View {
 }
 
 struct CardBack: View {
-    let index: Int
+    let player: Game.Player
     @ObservedObject var viewModel: VolleyballGame
     @Binding var degree: Double
     
@@ -100,7 +99,7 @@ struct CardBack: View {
             shape.fill(DavoloColor.Table).frame(minHeight: 70).shadow(radius: 15)
             HStack {
                 Spacer()
-                Text(viewModel.players[index].content).font(.body).foregroundColor(DavoloColor.Text)
+                Text(player.content).font(.body).foregroundColor(DavoloColor.Text)
                 Spacer()
             }
             HStack {
