@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// main view
 struct PositionListView: View {
     @ObservedObject var viewModel: VolleyballGame
     @Environment(\.verticalSizeClass) var vSize
@@ -21,46 +22,67 @@ struct PositionListView: View {
             ZStack {
                 VStack {
                     if (vSize == .regular) {
-                        LazyVGrid(columns: columns) {
-                            ForEach(viewModel.positions) { position in
-                                PositionView(position: position, viewModel: viewModel)
-                                    .aspectRatio(2/3, contentMode: .fit)
-                            }
-                        }
-                        Spacer()
-                        ButtonsView(viewModel: viewModel)
+                        RegularVSizeView(columns: columns, viewModel: viewModel)
                     }
                     else {
-                        HStack {
-                            LazyVGrid(columns: columns) {
-                                ForEach(viewModel.positions) { position in
-                                    if (position.content != "7") {
-                                        PositionView(position: position, viewModel: viewModel)
-                                            .aspectRatio(2/3, contentMode: .fit).frame(
-                                                maxWidth: UIScreen.main.bounds.size.width/4,
-                                                maxHeight: UIScreen.main.bounds.size.height/2 - 50)
-                                    }
-                                }
-                            }
-                            VStack {
-                                ForEach(viewModel.positions) { position in
-                                    if (position.content == "7") {
-                                        PositionView(position: position, viewModel: viewModel)
-                                            .aspectRatio(2/3, contentMode: .fit).frame(
-                                                maxWidth: UIScreen.main.bounds.size.width/4,
-                                                maxHeight: UIScreen.main.bounds.size.height/2 - 50)
-                                    }
-                                }
-                                Spacer()
-                                ButtonsView(viewModel: viewModel)
-                            }
-                        }
+                        IrregularVSizeView(columns: columns, viewModel: viewModel)
                     }
                 }.padding(.horizontal)
             }.background(DavoloColor.Background).navigationTitle("Posities")
     }
 }
 
+// view rendered in case of portrait mode
+struct RegularVSizeView: View {
+    let columns: Array<GridItem>
+    @StateObject var viewModel: VolleyballGame
+    
+    var body: some View {
+        LazyVGrid(columns: columns) {
+            ForEach(viewModel.positions) { position in
+                PositionView(position: position, viewModel: viewModel)
+                    .aspectRatio(2/3, contentMode: .fit)
+            }
+        }
+        Spacer()
+        ButtonsView(viewModel: viewModel)
+    }
+}
+
+// view rendered in case of landscape mode
+struct IrregularVSizeView: View {
+    let columns: Array<GridItem>
+    @StateObject var viewModel: VolleyballGame
+    
+    var body: some View {
+        HStack {
+            LazyVGrid(columns: columns) {
+                ForEach(viewModel.positions) { position in
+                    if (position.content != "7") {
+                        PositionView(position: position, viewModel: viewModel)
+                            .aspectRatio(2/3, contentMode: .fit).frame(
+                                maxWidth: UIScreen.main.bounds.size.width/4,
+                                maxHeight: UIScreen.main.bounds.size.height/2 - 50)
+                    }
+                }
+            }
+            VStack {
+                ForEach(viewModel.positions) { position in
+                    if (position.content == "7") {
+                        PositionView(position: position, viewModel: viewModel)
+                            .aspectRatio(2/3, contentMode: .fit).frame(
+                                maxWidth: UIScreen.main.bounds.size.width/4,
+                                maxHeight: UIScreen.main.bounds.size.height/2 - 50)
+                    }
+                }
+                Spacer()
+                ButtonsView(viewModel: viewModel)
+            }
+        }
+    }
+}
+
+// view used to display the cards, one for each position
 struct PositionView: View {
     let position: Game.Position
     @StateObject var viewModel: VolleyballGame
@@ -95,9 +117,9 @@ struct PositionView: View {
     }
 }
 
+// view with code for the buttons
 struct ButtonsView: View {
     @ObservedObject var viewModel: VolleyballGame
-    @State private var allPositions = false
     @State private var showPopUp = false
     let shape = RoundedRectangle(cornerRadius: 30)
     
@@ -117,11 +139,9 @@ struct ButtonsView: View {
                     shape.strokeBorder(lineWidth: 3).foregroundColor(.green)
                     Button("✔️"){
                         viewModel.positions.forEach {
-                            if !$0.isFilledIn { allPositions = false; return }
-                            else { allPositions = true }
+                            if !$0.isFilledIn { showPopUp = true }
                         }
-                        if allPositions { viewModel.saveSetUp() }
-                        else { showPopUp = true }
+                        if !showPopUp { viewModel.saveSetUp() }
                     }
                 }.padding(.horizontal)
             }.foregroundColor(.white).frame(height: 40).padding(.vertical)

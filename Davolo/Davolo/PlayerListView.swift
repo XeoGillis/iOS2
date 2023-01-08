@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// main view
 struct PlayerListView: View {
     @ObservedObject var viewModel: VolleyballGame
     
@@ -37,6 +38,7 @@ struct PlayerListView: View {
     }
 }
 
+// view used to display cards, one card per relevant player
 struct PlayerView: View {
     let player: Game.Player
     @ObservedObject var viewModel: VolleyballGame

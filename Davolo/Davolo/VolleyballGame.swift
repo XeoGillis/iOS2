@@ -95,9 +95,6 @@ class VolleyballGame: ObservableObject {
     func setMail(_ mail: String) {
         self.mail = mail
     }
-    func selectAllPlayers() {
-        model.selectAllPlayers()
-    }
     func updatePlayers(_ allPlayers: Array<Player>) {
         model.updatePlayers(allPlayers)
     }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// main view
 struct SelectPlayersView: View {
     @ObservedObject var viewModel: VolleyballGame
     
@@ -26,6 +27,7 @@ struct SelectPlayersView: View {
     }
 }
 
+// animation view, one per player
 struct PlayerSelectView: View {
     let index: Game.Player
     @ObservedObject var viewModel: VolleyballGame
@@ -35,6 +37,7 @@ struct PlayerSelectView: View {
     
     let durationAndDelay = 0.3
     
+    // based on code found on the Internet, slightly tweaked
     func flipCard() {
         isFlipped = !isFlipped
         if isFlipped {
@@ -53,6 +56,7 @@ struct PlayerSelectView: View {
             }
         }
     }
+    // end of code found on the Internet
     
     var body: some View {
         ZStack {
@@ -66,6 +70,7 @@ struct PlayerSelectView: View {
     }
 }
 
+// view to imitate the front of a card
 struct CardFront: View {
     let player: Game.Player
     @ObservedObject var viewModel: VolleyballGame
@@ -88,6 +93,7 @@ struct CardFront: View {
     }
 }
 
+// view to imitate the back of a card
 struct CardBack: View {
     let player: Game.Player
     @ObservedObject var viewModel: VolleyballGame
@@ -110,6 +116,7 @@ struct CardBack: View {
     }
 }
 
+// view with code for the buttons
 struct ButtonSelectView: View {
     @ObservedObject var viewModel: VolleyballGame
     let shape = RoundedRectangle(cornerRadius: 30)

@@ -36,16 +36,13 @@ struct Game {
         playersPOST = Array(repeating: "", count: allPositions.count)
     }
     
-    // STARTSCREEN
-    
-    mutating func selectAllPlayers() {
-        players.indices.forEach { players[$0].isSelected = true }
-    }
+    // SELECTPLAYERSVIEW
+
     mutating func addPlayer(with number : Int) {
         players.indices.forEach { if players[$0].id == number { players[$0].isSelected.toggle() } }
     }
     
-    // CHOOSE POSITION AND PLAYER
+    // POSITIONLISTVIEW
     
     mutating func choosePosition(_ namedPosition : Int) {
         for index in players.indices {
@@ -53,6 +50,9 @@ struct Game {
             players[index].isFaceUp = suitable
         }
     }
+    
+    // PLAYERLISTVIEW
+    
     mutating func choosePlayer(_ namedPlayer : Int, at namedPosition : Int) {
         var rememberIndex = 0
         playersPOST[namedPosition-1] = getPlayerById(namedPlayer)
@@ -74,6 +74,9 @@ struct Game {
             }
         }
     }
+    
+    // CHOOSEPLAYER HELPER FUNCTIONS
+    
     mutating func editPlayer(_ indexPlayer : Int, at namedPosition : Int) {
         for index in players.indices {
             if players[index].id == positions[indexPlayer].player {
@@ -106,6 +109,9 @@ struct Game {
         }
         save(positionsPOST, playersPOST.joined(separator: " "), mailto: mail)
     }
+    
+    // SAVESETUP HELPER FUNCTIONS
+    
     func postAPI(_ pos: String, _ play: String, _ mail: String) async {
         let url = URL(string: "http://localhost:9000/api/match")
         guard let requestUrl = url else { fatalError() }
